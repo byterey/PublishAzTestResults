@@ -99,6 +99,7 @@ namespace PublishAzDoTestResults
 
         protected override void ProcessRecord()
         {
+            this.Token = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"`:{Token}"));
             string BodyRequest = "";
             var testplanID = TestPlanObject.value[0].testPlan.id;
             var TestSuiteID = TestPlanObject.value[0].testSuite.id;
@@ -124,6 +125,7 @@ namespace PublishAzDoTestResults
             Console.WriteLine($"Result Published to {Uri}/_testPlans/execute?planId={testplanID}&suiteId={TestSuiteID}");
             Console.WriteLine($"Test Configuration: {TestConfiguration}");
             PrintResults();
+            PrintNotProcessTestCases();
 
         } // End of class ProcessRecord
 
@@ -132,6 +134,13 @@ namespace PublishAzDoTestResults
             TestResultsCollector results = LogicProcess.GetTestResultsCollector();
             results.PrintResults();
         }
+
+        private void PrintNotProcessTestCases()
+        {
+            TestResultsCollector results = LogicProcess.GetTestResultsCollector();
+            results.PrintNotFoundTestCase();
+        }
+
 
         private GetAzDoTestRun SetToAzTestplanModel(Value list)
         {
