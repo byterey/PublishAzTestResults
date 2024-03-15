@@ -45,18 +45,13 @@ namespace PublishAzDoTestResults.core
                             //Console.WriteLine($"Testpoint of TestCase {testCase.Name} is {pointslist.id}");
                             TestPoints.Add(pointslist.id);
                             localTestPoint = pointslist.id;
-                            ReasonForTestCaseNotFound = "Configuration " + TestConfiguration + "was Not Found";
+                            ReasonForTestCaseNotFound = "Testcase was not found in the testplan or TestConfiguration is not set";
                         }
                     }
                 }
                 if (localTestPoint == 0)
                 {
                     CollectNotFoundInTestPlan(testCase.Name, ReasonForTestCaseNotFound);
-                }
-                else
-                {
-                    //CollectResults(testCase, TestPlan, localTestPoint);
-
                 }
 
                 localTestPoint = 0;
@@ -65,7 +60,7 @@ namespace PublishAzDoTestResults.core
 
         private void CollectNotFoundInTestPlan(string TestCaseNotFoundInTestPlan, string reason)
         {
-            //NotFoundInTestPlan.Add(TestCaseNotFoundInTestPlan, reason);
+            collector.NotProcessedTestCases(TestCaseNotFoundInTestPlan, reason);
         }
 
         private ObjectBuilder CollectResults(Value testCase, JTestSuite JUnitResults, ObjectBuilder obj)

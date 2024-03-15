@@ -63,7 +63,9 @@ function Import-JUnitToAzTestPlan {
         [string] $TestConfiguration
     )
 
-    $TestPlanObj = Get-AzDoTestPlan -Token $Token -Uri $ProjectUrl -TestPlanID $TestPlanID -TestSuiteID $TestSuiteID
+    $B64Pat = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("`:$Token"))
+
+    $TestPlanObj = Get-AzDoTestPlan -Token $B64Pat -Uri $ProjectUrl -TestPlanID $TestPlanID -TestSuiteID $TestSuiteID
 
     Import-AzDoTestRunJUnit -FilePath $ExecutionReport -Uri $ProjectUrl -Token $Token -TestPlan $TestPlanObj -TestConfiguration $TestConfiguration
 }
