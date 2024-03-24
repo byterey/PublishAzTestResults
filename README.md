@@ -1,7 +1,7 @@
 # Powershell Gallery
 [Powershell gallery: Import-JUnitToAzTestPlan](https://www.powershellgallery.com/packages/Import-JUnitToAzTestPlan)
 
-Latest release version: `1.1.4`
+Latest release version: `1.1.5`
 
 ### Current supported test file
 - JUnit

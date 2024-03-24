@@ -25,7 +25,7 @@
 
  .Example
    # Description: This command imports JUnit test results into Azure Test Plans. Replace `<PAT>` with your Personal Access Token (PAT), `{organization}` and `{project}` with your Azure DevOps organization and project names respectively, `<TestPlan ID>` and `<Testsuite ID>` with the respective IDs of your test plan and test suite, `"Windows 10"` with the desired test configuration, and `"TEST-example.xml"` with the filename of the JUnit XML test report you wish to import.
-   Import=JUnitToAzTestPlan -Token <PAT> -AzDevOpsProjectUrl "https://dev.azure.com/{organization}/{project}" -TestPlanID <TestPlan ID> -testSuite <Testsuite ID> -TestConfiguration "Windows 10" -ExecutionReport "TEST-example.xml"
+   Import-JUnitToAzTestPlan -Token <PAT> -AzDevOpsProjectUrl "https://dev.azure.com/{organization}/{project}" -TestPlanID <TestPlan ID> -testSuite <Testsuite ID> -TestConfiguration "Windows 10" -ExecutionReport "TEST-example.xml"
 
  .Example
    # Description: This command using parameter alias
@@ -62,8 +62,6 @@ function Import-JUnitToAzTestPlan {
         [Alias("TC")]
         [string] $TestConfiguration
     )
-
-    $B64Pat = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("`:$Token"))
 
     $TestPlanObj = Get-AzDoTestPlan -Token $B64Pat -Uri $ProjectUrl -TestPlanID $TestPlanID -TestSuiteID $TestSuiteID
 
