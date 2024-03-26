@@ -119,8 +119,11 @@ namespace PublishAzDoTestResults
             string[] arrayBodyRequest = LogicProcess.PrepareResultsToPatch(GetResult, JUnitResults);
 
             //Console.Write("PrepareResultsToPatch BodyRequest: " + arrayBodyRequest);
-
-            var list2 = PatchNewTestRun(Token, Uri, arrayBodyRequest, list.id.ToString());
+            
+            if (LogicProcess.GetTestPoints().Count != 0)
+            {
+                var list2 = PatchNewTestRun(Token, Uri, arrayBodyRequest, list.id.ToString());
+            }
 
             Console.WriteLine($"Result Published to {Uri}/_testPlans/execute?planId={testplanID}&suiteId={TestSuiteID}");
             Console.WriteLine($"Test Configuration: {TestConfiguration}");

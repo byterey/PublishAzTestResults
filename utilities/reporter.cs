@@ -8,6 +8,7 @@ namespace PublishAzDoTestResults.utilities
     {
         private int passedCount;
         private int failedCount;
+        private int notProcessedCount;
         private string _URL;
 
         private List<Dictionary<string, string>> TestCaseNotFound = new List<Dictionary<string, string>>();
@@ -30,19 +31,24 @@ namespace PublishAzDoTestResults.utilities
             }
         }
 
+        public void NotProcessed()
+        {
+            notProcessedCount++;
+        }
+
         public void PrintResults()
         {
             Console.WriteLine("Test Results:");
             Console.WriteLine($"    Passed: {passedCount}");
             Console.WriteLine($"    Failed: {failedCount}");
+            Console.WriteLine($"    Not Processed: {notProcessedCount}");
         }
 
         public void NotProcessedTestCases(string TestCaseName, String Reason)
         {
             Dictionary<string, string> map1 = new Dictionary<string, string>();
 
-            map1.Add("TestCase", "Value1");
-            map1.Add("Reason", "Value2");
+            map1.Add($"{TestCaseName}", $"{Reason}");
             TestCaseNotFound.Add(map1);
         }
 
@@ -54,13 +60,15 @@ namespace PublishAzDoTestResults.utilities
             }
             else
             {
-                Console.WriteLine("List of testcases that was not processed");
+                Console.WriteLine("\nList of testcases that was not processed");
                 // Print all entries
+                Console.WriteLine("| Testcase      | Reason    |");
+                Console.WriteLine("|----------|----------|");
                 foreach (var map in TestCaseNotFound)
                 {
                     foreach (var entry in map)
                     {
-                        Console.WriteLine($"TestCase Name: {entry.Key}, Reason: {entry.Value}");
+                        Console.WriteLine($"| {entry.Key, -30} | {entry.Value, -27} |");
                     }
                 }
             }
