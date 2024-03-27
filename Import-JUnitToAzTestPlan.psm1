@@ -63,7 +63,7 @@ function Import-JUnitToAzTestPlan {
         [string] $TestConfiguration
     )
 
-    $TestPlanObj = Get-AzDoTestPlan -Token $B64Pat -Uri $ProjectUrl -TestPlanID $TestPlanID -TestSuiteID $TestSuiteID
+    $TestPlanObj = Get-AzDoTestPlan -Token $Token -Uri $ProjectUrl -TestPlanID $TestPlanID -TestSuiteID $TestSuiteID
 
     Import-AzDoTestRunJUnit -FilePath $ExecutionReport -Uri $ProjectUrl -Token $Token -TestPlan $TestPlanObj -TestConfiguration $TestConfiguration
 }
