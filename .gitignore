@@ -7,3 +7,6 @@
 /.vs
 /obj
 /installer.ps1
+/Properties/launchSettings.json
+/aztestplansdk.dll
+/PublishAzDoTestResults.dll

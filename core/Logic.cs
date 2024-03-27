@@ -5,6 +5,7 @@ using PublishAzDoTestResults.utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
@@ -36,22 +37,26 @@ namespace PublishAzDoTestResults.core
 
                 string ReasonForTestCaseNotFound = "";
 
-                foreach (var points in PointsAssignments)
+                if (PointsAssignments.Count() == 0)
                 {
-                    foreach (var pointslist in points)
+                    ReasonForTestCaseNotFound = "not found in the testplan";
+                    collector.NotProcessed();
+                    CollectNotFoundInTestPlan(testCase.Name, ReasonForTestCaseNotFound);
+                }
+
+                else
+                {
+                    foreach (var points in PointsAssignments)
                     {
-                        if (pointslist.configurationName == TestConfiguration)
+                        foreach (var pointslist in points)
                         {
-                            //Console.WriteLine($"Testpoint of TestCase {testCase.Name} is {pointslist.id}");
-                            TestPoints.Add(pointslist.id);
-                            localTestPoint = pointslist.id;
-                            ReasonForTestCaseNotFound = "Testcase was not found in the testplan or TestConfiguration is not set";
+                            if (pointslist.configurationName == TestConfiguration)
+                            {
+                                //Console.WriteLine($"Testpoint of TestCase {testCase.Name} is {pointslist.id}");
+                                TestPoints.Add(pointslist.id);
+                            }
                         }
                     }
-                }
-                if (localTestPoint == 0)
-                {
-                    CollectNotFoundInTestPlan(testCase.Name, ReasonForTestCaseNotFound);
                 }
 
                 localTestPoint = 0;
