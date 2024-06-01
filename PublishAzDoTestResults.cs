@@ -105,7 +105,8 @@ namespace PublishAzDoTestResults
             var TestSuiteID = TestPlanObject.value[0].testSuite.id;
 
             FileHandler.Instance.Initialize(FilePath);
-            JTestSuite JUnitResults = FileHandler.Instance.ReadXML();
+            
+            JUnitTest JUnitResults = FileHandler.Instance.ReadXML();
             //WriteObject(JUnitResults);
             //GetFileMetaData(FilePath);
 
@@ -156,7 +157,7 @@ namespace PublishAzDoTestResults
             return getAzDoTestRun;
         }
 
-        private string ProcessTestRun(JTestSuite JUnitResults)
+        private string ProcessTestRun(JUnitTest JUnitResults)
         {
             DateTime now = DateTime.Now;
             string formattedDate = now.ToString("yyyy-MM-dd.HHmm");

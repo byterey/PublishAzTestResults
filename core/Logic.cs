@@ -23,44 +23,87 @@ namespace PublishAzDoTestResults.core
         TestResultsCollector collector = new TestResultsCollector();
 
         // Assuming some test results are recorded here
-        public void ReadEachTestCasesArray(JTestSuite JUnitResults, GetAzDoTestRun TestPlan, string TestConfiguration)
+        public void ReadEachTestCasesArray(JUnitTest JUnitResults, GetAzDoTestRun TestPlan, string TestConfiguration)
         {
             int localTestPoint = 0;
-
-            JUnitResults.TestCases.ForEach(testCase =>
+            if (JUnitResults is JTestSuites)
             {
-                //Console.WriteLine($"Test Case name from xml: {testCase.Name}");
-
-                var PointsAssignments = TestPlan.value
-                    .Where(nested => string.Equals(nested.workItem.name, testCase.Name, StringComparison.OrdinalIgnoreCase))
-                    .Select(nested => nested.pointAssignments);
-
-                string ReasonForTestCaseNotFound = "";
-
-                if (PointsAssignments.Count() == 0)
+                JUnitResults.TestSuite.ForEach(Testsuite =>
                 {
-                    ReasonForTestCaseNotFound = "not found in the testplan";
-                    collector.NotProcessed();
-                    CollectNotFoundInTestPlan(testCase.Name, ReasonForTestCaseNotFound);
-                }
-
-                else
-                {
-                    foreach (var points in PointsAssignments)
+                    Testsuite.TestCases.ForEach(testCase =>
                     {
-                        foreach (var pointslist in points)
+                        //Console.WriteLine($"Test Case name from xml: {testCase.Name}");
+
+                        var PointsAssignments = TestPlan.value
+                            .Where(nested => string.Equals(nested.workItem.name, testCase.Name, StringComparison.OrdinalIgnoreCase))
+                            .Select(nested => nested.pointAssignments);
+
+                        string ReasonForTestCaseNotFound = "";
+
+                        if (PointsAssignments.Count() == 0)
                         {
-                            if (pointslist.configurationName == TestConfiguration)
+                            ReasonForTestCaseNotFound = "not found in the testplan";
+                            collector.NotProcessed();
+                            CollectNotFoundInTestPlan(testCase.Name, ReasonForTestCaseNotFound);
+                        }
+
+                        else
+                        {
+                            foreach (var points in PointsAssignments)
                             {
-                                //Console.WriteLine($"Testpoint of TestCase {testCase.Name} is {pointslist.id}");
-                                TestPoints.Add(pointslist.id);
+                                foreach (var pointslist in points)
+                                {
+                                    if (pointslist.configurationName == TestConfiguration)
+                                    {
+                                        //Console.WriteLine($"Testpoint of TestCase {testCase.Name} is {pointslist.id}");
+                                        TestPoints.Add(pointslist.id);
+                                    }
+                                }
+                            }
+                        }
+
+                        localTestPoint = 0;
+                    }); //End of forEach
+                });
+
+            }
+            if (JUnitResults is JTestSuite)
+            {
+                JUnitResults.TestCases.ForEach(testCase =>
+                {
+                    //Console.WriteLine($"Test Case name from xml: {testCase.Name}");
+
+                    var PointsAssignments = TestPlan.value
+                        .Where(nested => string.Equals(nested.workItem.name, testCase.Name, StringComparison.OrdinalIgnoreCase))
+                        .Select(nested => nested.pointAssignments);
+
+                    string ReasonForTestCaseNotFound = "";
+
+                    if (PointsAssignments.Count() == 0)
+                    {
+                        ReasonForTestCaseNotFound = "not found in the testplan";
+                        collector.NotProcessed();
+                        CollectNotFoundInTestPlan(testCase.Name, ReasonForTestCaseNotFound);
+                    }
+
+                    else
+                    {
+                        foreach (var points in PointsAssignments)
+                        {
+                            foreach (var pointslist in points)
+                            {
+                                if (pointslist.configurationName == TestConfiguration)
+                                {
+                                    //Console.WriteLine($"Testpoint of TestCase {testCase.Name} is {pointslist.id}");
+                                    TestPoints.Add(pointslist.id);
+                                }
                             }
                         }
                     }
-                }
 
-                localTestPoint = 0;
-            }); //End of forEach
+                    localTestPoint = 0;
+                }); //End of forEach
+            }
         }
 
         private void CollectNotFoundInTestPlan(string TestCaseNotFoundInTestPlan, string reason)
@@ -68,7 +111,7 @@ namespace PublishAzDoTestResults.core
             collector.NotProcessedTestCases(TestCaseNotFoundInTestPlan, reason);
         }
 
-        private ObjectBuilder CollectResults(Value testCase, JTestSuite JUnitResults, ObjectBuilder obj)
+        private ObjectBuilder CollectResults(Value testCase, JUnitTest JUnitResults, ObjectBuilder obj)
         {
             collector.RecordResult(CheckFailure(JUnitResults, testCase.testCase.name) == "Passed" ? true : false);
 
@@ -86,7 +129,7 @@ namespace PublishAzDoTestResults.core
         }
 
 
-        private string CheckFailure(JTestSuite testCases, string testCaseName)
+        private string CheckFailure(JUnitTest testCases, string testCaseName)
         {
             Failure failureObject = GetFailureObject(testCases, testCaseName);
 
@@ -102,14 +145,14 @@ namespace PublishAzDoTestResults.core
             return outcome;
         }
 
-        private string GetErrorMessage(JTestSuite testCases, string testCaseName)
+        private string GetErrorMessage(JUnitTest testCases, string testCaseName)
         {
             Failure failureObject = GetFailureObject(testCases, testCaseName);
             string value = failureObject?.Message;
             return value;
         }
 
-        private string GetStackTraceMessage(JTestSuite testCases, string testCaseName)
+        private string GetStackTraceMessage(JUnitTest testCases, string testCaseName)
         {
             Failure failureObject = GetFailureObject(testCases, testCaseName);
             string value = failureObject?.StackTrace;
@@ -117,7 +160,7 @@ namespace PublishAzDoTestResults.core
 
         }
 
-        private Failure GetFailureObject(JTestSuite testCases, string testCaseName)
+        private Failure GetFailureObject(JUnitTest testCases, string testCaseName)
         {
             Failure failureObject = new Failure();
             failureObject = testCases.TestCases
@@ -145,7 +188,7 @@ namespace PublishAzDoTestResults.core
             return TestPoints;
         }
 
-        internal string[] PrepareResultsToPatch(GetAzDoTestRun getResult, JTestSuite JUnitResults)
+        internal string[] PrepareResultsToPatch(GetAzDoTestRun getResult, JUnitTest JUnitResults)
         {
             List<string> PatchBodyRequestList = new List<string>();
             var ObjectBuilder = new ObjectBuilder();
