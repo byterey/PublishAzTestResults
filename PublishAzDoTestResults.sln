@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PublishAzDoTestResults", "PublishAzDoTestResults.csproj", "{6B7F64F9-9D9F-4DE0-9225-419BCED4EAAE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AzTestPlanSDK", "..\aztestplansdk\AzTestPlanSDK.csproj", "{F5F0EE13-D044-4F00-BB83-D840459D89B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6B7F64F9-9D9F-4DE0-9225-419BCED4EAAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B7F64F9-9D9F-4DE0-9225-419BCED4EAAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B7F64F9-9D9F-4DE0-9225-419BCED4EAAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5F0EE13-D044-4F00-BB83-D840459D89B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5F0EE13-D044-4F00-BB83-D840459D89B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5F0EE13-D044-4F00-BB83-D840459D89B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5F0EE13-D044-4F00-BB83-D840459D89B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
