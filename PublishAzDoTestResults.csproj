@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <PackageReference Include="byterey.azdevopssdk.aztestplansdk" Version="1.1.0" />
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.0-preview-06">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>  
@@ -17,8 +18,5 @@
 	  <PackageReference Include="System.Text.Json" Version="4.7.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\aztestplansdk\AzTestPlanSDK.csproj" />
-  </ItemGroup>
 
 </Project>
