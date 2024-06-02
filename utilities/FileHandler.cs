@@ -1,8 +1,7 @@
 ﻿using AzDoTestPlanSDK.Model.JUnit;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace PublishAzDoTestResults.utilities
@@ -38,17 +37,44 @@ namespace PublishAzDoTestResults.utilities
             return fileInfo.CreationTime.ToString("yyyy-MM-ddTHH:mm:ss.fZ");
         }
 
-        public JTestSuite ReadXML()
+        public JUnitTest ReadXML()
         {
             if (string.IsNullOrEmpty(filePath))
             {
                 throw new InvalidOperationException("File path has not been initialized. Call Initialize() first.");
             }
+            
 
-            XmlSerializer serializer = new XmlSerializer(typeof(JTestSuite));
-            using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+            string xml = File.ReadAllText(filePath);
+
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+
+            XmlSerializer serializer;
+
+            if (doc.DocumentElement.Name == "testsuite")
             {
-                return (JTestSuite)serializer.Deserialize(fileStream);
+                serializer = new XmlSerializer(typeof(JTestSuite));
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+                {
+                    return (JTestSuite)serializer.Deserialize(fileStream);
+                }
+
+            }
+            else if (doc.DocumentElement.Name == "testsuites")
+            {
+
+                serializer = new XmlSerializer(typeof(JTestSuites));
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+                {
+                    return (JTestSuites)serializer.Deserialize(fileStream);
+                }
+
+            }
+
+            else
+            {
+                return null;
             }
         }
     }
